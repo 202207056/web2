@@ -7,16 +7,16 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/">Home</a>
+        <a class="nav-link" aria-current="page" href="/">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/haksa/pro">교수관리</a>
+        <a class="nav-link" aria-current="page" href="/haksa/pro">교수관리</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/haksa/stu">학생관리</a>
+        <a class="nav-link" aria-current="page" href="/haksa/stu">학생관리</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/haksa/cou">강좌관리</a>
+        <a class="nav-link" aria-current="page" href="/haksa/cou">강좌관리</a>
       </li>
       </ul>
       <ul class="navbar-nav">
@@ -27,3 +27,11 @@
   </div>
 </div>
 </nav>
+<script>
+    $(document).ready(function(){
+        const pathname=window.location.pathname;
+        const path=pathname.split('/').slice(0, 3).join('/');
+        $(".nav-link").removeClass('active');
+        $(`.nav-link[href='${path}']`).addClass('active');
+    });
+</script>
