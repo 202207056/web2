@@ -1,3 +1,48 @@
 <div class="my-5">
-    <h1 class="text-center">로그인</h1>
+    <div class="row justify-content-center">
+        <div class="col-8 col-md-5 col-lg-4">
+            <div class="card my-5">
+                <div class="card-header">
+                    <h3 class="text-center">로그인</h3>
+                </div>
+                <div class="card-body">
+                    <form name="frm" method="post">
+                        <input name="scode" value="92414029" class="form-control mb-2" placeholder="학생번호">
+                        <input name="pass" value="1234" type="password" class="form-control mb-2" placeholder="비밀번호">
+                        <button type="submit" class="btn btn-primary w-100">로그인</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    $(frm).on("submit", function(e){
+        e.preventDefault();
+        const scode=$(frm.scode).val();
+        const pass=$(frm.pass).val();
+        if(scode=="" || pass==""){
+            alert("학번과 비밀번호는 꼭 입력하세요.");
+            $(frm.pass).focus();
+        }else{
+            $.ajax({
+                type:"post",
+                url:"/users/login",
+                data:{scode},
+                success:function(data){
+                    console.log(data);
+                    if(!data){
+                        alert("없는 학번입니다.");
+                    }else if(pass!=data.PASS){
+                        alert("비밀번호가 일치하지 않습니다.");
+                    }else{
+                       //alert("로그인 성공!");
+                       sessionStorage.setItem("scode", scode);
+                       sessionStorage.setItem("sname", data.SNAME);
+                       location.href="/";
+                    }
+                }
+            })
+        }
+  });
+</script>

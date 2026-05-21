@@ -18,20 +18,50 @@
       <li class="nav-item">
         <a class="nav-link" aria-current="page" href="/haksa/cou">강좌관리</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="/posts">게시판</a>
+      </li>
       </ul>
-      <ul class="navbar-nav">
+      <ul class="navbar-nav login">
         <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="/users/login">로그인</a>
+          <a class="nav-link active" aria-current="page" href="/users/login">로그인</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav logout">
+        <li class="nav-item scode">
+          <a class="nav-link active" aria-current="page" href="#"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active btn-logout" aria-current="page" href="#">로그아웃</a>
         </li>
     </ul>
   </div>
 </div>
 </nav>
 <script>
-    $(document).ready(function(){
-        const pathname=window.location.pathname;
-        const path=pathname.split('/').slice(0, 3).join('/');
-        $(".nav-link").removeClass('active');
-        $(`.nav-link[href='${path}']`).addClass('active');
+
+    const scode=sessionStorage.getItem("scode");
+    const sname=sessionStorage.getItem("sname");
+
+    $(".btn-logout").on("click", function(e){
+      e.preventDefault();
+      if(confirm("정말로 로그아웃하실래요?")){
+        sessionStorage.clear();
+        location.href="/";
+      }
+
     });
+    if(scode){
+      $(".login").hide(); $(".logout").show();
+      $(".logout .scode a").html(`${sname}(${scode})`);
+    }else{
+      $(".login").show(); $(".logout").hide();
+    }
+
+  //  $(document).ready(function(){
+  //      const pathname=window.location.pathname;
+  //      const path=pathname.split('/').slice(0, 3).join('/');
+   //     $(".nav-link").removeClass('active');
+   //     $(`.nav-link[href='${path}']`).addClass('active');
+   // });
 </script>
