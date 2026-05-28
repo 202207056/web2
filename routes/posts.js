@@ -11,19 +11,24 @@ router.get('/', function(req, res, next){
 //게시글 목록 데이터
 router.get('/list.json', async function(req, res){
     let con;
-    const page=parseInt(req.query.page);
-    const size=parseInt(req.query.size);
-    const off_rows = (page-1) * size;
+    let size = parseInt(req.query.size) || 5;
+    let page = parseInt(req.query.page) || 1;
+    let word = req.query.word || '';
+    let off_rows = (page-1) * size;
     try{
         con = await getConnection();
-        let sql = "select * from view_posts order by id desc "
-            sql+= `offset ${off_rows} rows fetch next ${size} rows only`;
+        let sql =" select * from view_posts ";
+            sql+=` WHERE TITLE LIKE '%${word}%' OR CONTENT LIKE '%${word}%' OR SNAME LIKE '%${word}%'`;
+            sql+=" order by id desc ";
+            sql+=` OFFSET ${off_rows} ROWS FETCH NEXT ${size} ROWS ONLY`;
         let result = await con.execute(sql, {}, {outFormat:oracledb.OUT_FORMAT_OBJECT});
-        const list = result.rows;
+        let list = result.rows;
 
-        sql = "select count(*) from posts";
+
+        sql = "select count(*) from view_posts ";
+        sql+=` WHERE TITLE LIKE '%${word}%' OR CONTENT LIKE '%${word}%' OR SNAME LIKE '%${word}%'`;
         result = await con.execute(sql);
-        const count = result.rows[0][0];
+        let count = result.rows[0][0];
 
         res.send({list, count});
     }catch(err){

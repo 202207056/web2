@@ -1,36 +1,71 @@
 <div class="my-5">
     <h1 class="text-center mb-5">게시판</h1>
-    <table id="tbl" class="table table-striped table-hover"></table>
-    <div class ="text-end">
-        <button id="prev" class="btn btn-primary btn-sm px-3">이전</button>
-        <span id="span_page">1/10</span>
-        <button id="next" class="btn btn-primary btn-sm px-3">다음</button>
+    <div class="row">
+        <div class="col-8 col-md-6 col-lg-4 mb-2">
+            <form name="frm" class="input-group">
+                <input name="word" class="form-control" placeholder="작성자, 제목, 내용">
+                <button class="btn btn-primary">검색</button>
+            </form>
+        </div>
+        <div class="col text-end">
+            <button class="btn btn-link" id="btn-write">글쓰기</button>
+        </div>
+    </div>
+    <table id="tbl" class="table table-bordered table-hover"></table>
+    <div class="text-center" id="pagination">
+        <button class="btn btn-link btn-prev">이전</button>
+        <span class="page_info px-3">1/10</span>
+        <button class="btn btn-link btn-next">다음</button>
     </div>
     <script id="temp" type="text/x-handlebars-template">
+        <thead class="text-center">
+            <tr>
+                <td>번호</td>
+                <td>제목</td>
+                <td>작성자</td>
+                <td>작성일</td>
+            </tr>
+        </thead>
         <tbody>
             {{#each .}}
             <tr>
                 <td>{{ID}}</td>
                 <td>{{TITLE}}</td>
-                <td>{{SNAME}}({{WRITER}})</td>
-                <td class="text-end">{{FMT_DATE}}</td>
+                <td>{{SNAME}}</td>
+                <td>{{FMT_DATE}}</td>
             </tr>
             {{/each}}
         </tbody>
     </script>
 </div>
 <script>
-    let page=38;
-    let size=5;
+    let page=1;
+    let size=3;
+    let word="";
     getList();
 
-    $("#next").on("click", function(){
-        page++;
+    $("#btn-write").on("click", function(){
+        if(scode){
+            location.href="/posts/insert";
+        }else{
+            sessionStorage.setItem("target", "/posts/insert");
+            location.href="/users/login";
+        }
+    });
+
+    $(frm).on("submit", function(e){
+        e.preventDefault();
+        word = $(frm.word).val();
+        page=1;
         getList();
     });
 
-    $("#prev").on("click", function(){
+    $(".btn-prev").on("click", function(){
         page--;
+        getList();
+    });
+    $(".btn-next").on("click", function(){
+        page++;
         getList();
     });
 
@@ -38,21 +73,22 @@
         $.ajax({
             type:"get",
             url:"/posts/list.json",
-            data:{page, size},
+            data:{page, size, word},
             success:function(data){
                 console.log(data);
                 const temp=Handlebars.compile($("#temp").html());
                 $("#tbl").html(temp(data.list));
-                $("#span_page").html(`${page}`);
-
-                if(page==1) $("#prev").attr("disabled", true);
-                else $("#prev").attr("disabled", false);
-
+               
                 const last = Math.ceil(data.count/size);
-                $("#span_page").html(`${page}/${last}`);
+                $(".page_info").html(`${page}/${last}`);
 
-                if(page==last) $("#next").attr("disabled", true);
-                else $("#next").attr("disabled", false);
+                if(page==1) $(".btn-prev").attr("disabled", "true");
+                else $(".btn-prev").attr("disabled", false);
+                if(page==last) $(".btn-next").attr("disabled", "true");
+                else $(".btn-next").attr("disabled", false);
+                
+                if(last > 1) $("#pagination").show();
+                else $("#pagination").hide();
             }
         });
     }

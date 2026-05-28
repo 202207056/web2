@@ -39,7 +39,11 @@
                        //alert("로그인 성공!");
                        sessionStorage.setItem("scode", scode);
                        sessionStorage.setItem("sname", data.SNAME);
-                       location.href="/";
+                       if(sessionStorage.getItem("target")){
+                            location.href=sessionStorage.getItem("target");
+                       }else{
+                            location.href="/";
+                        }
                     }
                 }
             })
