@@ -3,8 +3,8 @@
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
             <form name="frm">
-                <input name="title" class="form-control mb-3" placeholder="제목을 입력하세요">
-                <textarea name="content" class="form-control mb-3" rows="10" placeholder="내용을 입력하세요"></textarea>
+                <input name="title" value="<%=post.TITLE%>" class="form-control mb-3" placeholder="제목을 입력하세요">
+                <textarea name="content" class="form-control mb-3" rows="10" placeholder="내용을 입력하세요"><%=post.CONTENT%></textarea>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary px-5">저장</button>
                     <button type="reset" class="btn btn-secondary px-5">취소</button>
@@ -14,6 +14,8 @@
     </div>
 </div>
 <script>
+    const id="<%=post.ID%>";
+
     $(frm).on("submit", function(e){
         e.preventDefault();
         const title = $(frm.title).val();
@@ -22,16 +24,17 @@
             alert("제목을 입력하세요!");
             $(frm.title).focus();
         }else{
+            if(!confirm(`${id}번 게시글을 수정하실래요?`)) return;
             $.ajax({
                 type:"post",
-                url:"/posts/insert",
-                data:{title, content, writer:scode},
+                url:"/posts/update",
+                data:{title, content, id},
                 success:function(){
-                    alert("등록성공!");
+                    alert("수정성공!");
                     location.href="/posts"
                 },
                 error:function(){
-                    alert("등록실패!");
+                    alert("수정실패!");
                 }
             })
         }

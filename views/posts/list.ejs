@@ -30,9 +30,9 @@
             {{#each .}}
             <tr>
                 <td>{{ID}}</td>
-                <td>{{TITLE}}</td>
+                <td><a href="/posts/{{ID}}">{{TITLE}}</a></td>
                 <td>{{SNAME}}</td>
-                <td>{{FMT_DATE}}</td>
+                <td class="text-end">{{FMT_DATE}}</td>
             </tr>
             {{/each}}
         </tbody>
@@ -40,7 +40,7 @@
 </div>
 <script>
     let page=1;
-    let size=3;
+    let size=5;
     let word="";
     getList();
 

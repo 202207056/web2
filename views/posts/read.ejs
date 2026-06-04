@@ -1,0 +1,54 @@
+<div class="my-5">
+    <h1 class="text-center mb-5">게시글 정보</h1>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="text-end mb-2 btn-modify">
+                <button class="btn btn-outline-primary btn-update">글수정</button>
+                <button class="btn btn-outline-danger btn-delete">글삭제</button>
+            </div>
+            <div class="card">
+                <div class="card-header py-3">
+                    <%=post.TITLE%>
+                </div>
+                <div class="card-body">
+                    <p style="white-space: pre-wrap;"><%=post.CONTENT%></p>
+                </div>
+                <div class="card-footer py-3">
+                    Posted on <span><%=post.FMT_DATE%></span>
+                    by <span class="writer"><%=post.SNAME%>(<%=post.WRITER%>)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const writer="<%=post.WRITER%>";
+    const id="<%=post.ID%>";
+
+    if(writer==scode){
+        $(".btn-modify").show();
+    }else{
+        $(".btn-modify").hide();
+    }
+
+    $(".btn-delete").on("click", function(){
+        if(confirm(`${id}번 게시글을 삭제하실래요?`)){
+            $.ajax({
+                type:"post",
+                url:"/posts/delete",
+                data:{id},
+                success:function(){
+                    alert("삭제성공!");
+                    location.href="/posts";
+                },
+                error:function(){
+                    alert("삭제실패!");
+                }
+            })
+        }
+    });
+
+    $(".btn-update").on("click", function(){
+        location.href=`/posts/update/${id}`;
+    });
+</script>
